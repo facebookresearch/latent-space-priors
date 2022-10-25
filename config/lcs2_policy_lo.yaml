@@ -1,0 +1,84 @@
+defaults:
+  - common
+  - agent: vmpo
+
+ref_path: ???
+
+max_steps: 1e10
+dataset: cmu_locomotion_small
+clips: null
+robot: AMASS
+features:
+  observation: [proprioceptive, reference_rel_root_xypos_current]
+  reference: [mjbox_xqs0]
+  aux: [reference_rel_root_pos_local]
+  clip_id: [clip_id]
+n_ref: 6
+last_ref_only: true
+reference_dims: 2
+
+slurm:
+  gpus_per_task: 1
+  cpus_per_task: 40
+  mem_gb: 128
+
+scale_by_worldsize:
+  - env.train_args.n_envs
+  - eval.interval
+
+eval:
+  interval: 10240000 # 20*160*32*100
+
+env:
+  name: CMUMocap2020CppMulti-v1
+  raw: true
+  train_procs: 1
+  eval_procs: 1
+  train_args:
+    dataset: ${dataset}
+    clips: ${clips}
+    n_envs: 160
+    ref_path: ${ref_path}
+    features: ${features}
+    robot: ${robot}
+    n_ref: ${n_ref}
+    last_ref_only: ${last_ref_only}
+    reference_dims: ${reference_dims}
+    verbose: false
+  eval_args:
+    dataset: ${dataset}
+    clips: ${clips}
+    ref_path: ${ref_path}
+    features: ${features}
+    robot: ${robot}
+    n_ref: ${n_ref}
+    last_ref_only: ${last_ref_only}
+    always_init_at_clip_start: true
+    n_envs: 50
+    reference_dims: ${reference_dims}
+    verbose: false
+
+agent:
+  batch_num_traj: ${env.train_args.n_envs}
+  batch_traj_len: 32
+  gamma: 0.95
+  eps_eta: 0.1
+  eps_alpha_mu: 0.1
+  eps_alpha_sigma: 1e-5
+  multi_reward: true
+
+video: null # not during training
+visdom:
+  offline: true
+
+model:
+  pi: pi_comic_d2rl_gs_ln_d_1024
+  v:
+    _target_: v_comic_d2rl_ln_d_1024
+    reward_terms: 5
+
+optim:
+  _all_:
+    _target_: torch.optim.Adam
+    lr: 1e-4
+    fuse: true

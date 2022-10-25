@@ -1,0 +1,21 @@
+# Planning with latent space prior and low-level policy
+
+name: 'zpriorplan'
+replan_interval: 16
+history: 32 # for VAE encoding
+context: 4 # past frames for prior
+horizon: 60
+rollouts: 512
+score_fn: combined
+plan_act_offset: 6
+save_plans: false
+reward_sigmoid: reciprocal
+supply_deltas: false
+reencode_latents: false
+
+prior:
+  path: ???
+  model: from_path
+  temp: 1.0
+  mixture_temp: ${agent.prior.temp}
+  vae_without_tanh: true

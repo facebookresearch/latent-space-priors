@@ -1,0 +1,17 @@
+bipedal-skills==2.0
+git+https://github.com/deepmind/dm_control.git@892b4e4
+git+https://github.com/jgehring/fairmotion.git@c7b29c3
+git+https://github.com/facebookresearch/pytorch3d.git@v0.6.2
+h5py
+hdf5plugin
+hydra-core~=1.1.0
+gym~=0.26.2
+imageio-ffmpeg~=0.4.5
+imageio~=2.9.0
+matplotlib>=3.4
+nevergrad
+numpy
+pillow>=9.2.0
+scipy>=1.6
+tensorboard
+visdom~=0.1.8

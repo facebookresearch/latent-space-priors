@@ -1,0 +1,63 @@
+defaults:
+  - common
+  - agent: zpriorplan
+
+policy_lo: ???
+prior: ???
+
+max_steps: 0 # no training here
+robot: HumanoidAMASSPC
+features: comic-proprioceptive-zdelta
+
+env:
+  name: BiskGoToSphereC-v1
+  train_procs: 1
+  eval_procs: 5
+  args:
+    robot: ${robot}
+    features: ${features}
+    fork: false # because we want to access the physics state
+  wrappers:
+    - time
+
+agent:
+  context: 1
+  history: 32
+  horizon: 64
+  rollouts: 1024
+  replan_interval: 4
+  score_fn: distance
+  supply_deltas: true
+  prior:
+    path: ${prior}
+    temp: 3
+    mixture_temp: 9
+    model:
+      name: simple_prior
+      level: 0
+      labels: null
+      n_ctx: 64
+      width: 256
+      depth: 4
+      conditioner: simple
+      conditioner_past_ctx: 0
+      emb_dropout: 0.0
+      deterministic_z: false
+      deterministic_tgt: true
+      deterministic_cond: false
+      tanh_output: true
+      entropy_reg: 0.01
+      vae:
+        name: convvae_4x64_32
+        seq_len: 64
+        tanh_latents: true
+      bypass_encoder: true
+      vae_input_dim: 135
+      mixture_size: 8
+
+model:
+  pi: pi_comic_d2rl_gs_vc_ln_d_1024
+  _init_from_: ${policy_lo}
+
+optim:
+  # None

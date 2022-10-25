@@ -1,0 +1,71 @@
+# Some reasonable defaults for all experiments
+hydra:
+  run:
+    dir: .
+  sweep:  # used for slurm jobs
+    dir: /checkpoint/${oc.env:USER}/jobs/${now:%Y}/${now:%Y-%m}/${now:%Y-%m-%d}/${hydra.job.name}.${now:%H-%M-%S}
+slurm:
+  partition: learnlab
+  nodes: 1
+  cpus_per_task: 5
+  gpus_per_task: 1
+  gpus_per_node: null
+  time_min: 4320
+  mem_gb: 32
+  comment: ""
+  max_restart: 3
+  constraint: null
+  array_throughput: 256
+  extra_args: {}
+
+seed: 0
+device: cuda
+auto_select_gpu: false # based on job id
+log_level: info
+visdom:
+  host: localhost
+  port: 8097
+  env: main
+  offline: false
+  logfile: visdom.log
+
+checkpoint_path: checkpoint.pt
+init_from: null
+keep_checkpoints: true
+auto_adapt: false # Automatic adjustment to environments
+
+env:
+  name: null
+  raw: false
+  train_instances: 1 # >1 requires agents to support async steps
+  eval_instances: # these are named and include overrides/addditions to eval_args
+    default: {}
+  train_procs: 1
+  eval_procs: 10
+  args: {}
+  train_args: ${env.args}
+  eval_args: ${env.args}
+  wrappers: []
+
+eval:
+  interval: 10000
+  metrics:
+    episode_length: default
+    return_disc: default
+    return_undisc: default
+    reward: default
+  # Record eval videos; set to null to disable
+  video:
+    record_all: false
+    length: 500
+    size: [480, 480]
+    annotations: true
+    mode: rgb_array
+
+# Record training videos; set to null to disable
+video:
+  interval: 10000
+  length: 500
+  size: [480, 480]
+  annotations: true
+  mode: rgb_array

@@ -1,0 +1,45 @@
+defaults:
+  - common
+
+slurm:
+  gpus_per_task: 1
+  cpus_per_task: 8
+  mem_gb: 128
+  constraint: gpu2
+
+loop_args:
+  normalize: false
+  prior: false
+  eval_interval: 1000
+  kl_reg: 0.2
+
+dataset:
+  path: ???
+  type: subseq
+  train_args: {length: 256, skip: 8}
+  valid_args: {length: 256, skip: 128}
+  inputs: [relxypos, r6]
+  label: relxypos
+  num_workers: 2
+
+n_updates: 100000
+batch_size: 128
+loss: 'comic'
+distributed:
+  size: auto
+  rdvu_path: /tmp
+video: null
+eval:
+  video: null
+
+model:
+  name: convvae_4x64_32
+  seq_len: ${dataset.train_args.length}
+  tanh_latents: true
+
+optim:
+  _all_:
+    _target_: torch.optim.Adam
+    lr: 3e-4
+    fuse: true
+    warmup: 100

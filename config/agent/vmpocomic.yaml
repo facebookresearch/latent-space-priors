@@ -1,0 +1,34 @@
+# Defaults for V-MPO agent
+
+name: 'vmpocomic'
+gamma: 0.99  # discount factor
+epochs: 1
+target_steps: 100
+eta: 1.0
+alpha_mu: 1.0
+alpha_sigma: 1.0
+eps_eta: 0.01
+eps_alpha_mu: 0.0075
+eps_alpha_sigma: 1e-5
+optim_lg:
+  _target_: torch.optim.Adam
+  lr: 1e-4
+batch_num_traj: ${env.train_procs}
+batch_traj_len: 32
+rpbuf_device: auto
+kl_reg: 1e-4
+prior: normal # or ar1
+ar1_alpha: 0.95
+max_steps: ${max_steps}
+latent_dim: 60
+tanh_latents: true
+multi_reward: false
+encoder_proprio_input: true
+encoder_prev_input: true
+encoder_interval: 1
+graph: false
+
+distributed:
+  size: 1
+  rank: 0
+  rdvu_path: /tmp

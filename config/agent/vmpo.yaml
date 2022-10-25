@@ -1,0 +1,31 @@
+# Defaults for V-MPO agent
+
+name: 'vmpo'
+gamma: 0.99  # discount factor
+epochs: 1
+target_steps: 100
+eta: 1.0
+alpha_mu: 1.0
+alpha_sigma: 1.0
+eps_eta: 0.01
+eps_alpha_mu: 0.0075
+eps_alpha_sigma: 1e-5
+optim_lg:
+  _target_: torch.optim.Adam
+  lr: 1e-4
+batch_num_traj: ${env.train_procs}
+batch_traj_len: 39
+flatten_obs: false
+rpbuf_device: auto
+multi_reward: false
+aux_loss: null
+aux_factor: 1.0
+reference_size: null
+ppo_style: false
+sample_reuse: 0.0
+offpolicy_correction: false
+
+distributed:
+  size: 1
+  rank: 0
+  rdvu_path: /tmp

@@ -1,0 +1,102 @@
+defaults:
+  - common
+  - agent: guidedsac
+
+policy_lo: ???
+prior: ???
+
+max_steps: 5e7
+robot: HumanoidAMASSPC
+auto_adapt: true
+features_lo: comic-proprioceptive-zdelta
+keep_checkpoints: 2e6
+
+slurm:
+  mem_gb: 48
+  cpus_per_task: 7
+
+eval:
+  interval: 100000
+  metrics:
+    score: sum:default
+
+video:
+  interval: ${eval.interval}
+visdom:
+  offline: true
+
+env:
+  name: BiskGoToTargetsC-v1
+  train_procs: 5
+  eval_procs: 50
+  args:
+    robot: ${robot}
+    features: comic
+  wrappers:
+    - time
+    - bisk_features: observation_lo:${features_lo}
+
+agent:
+  policy_lo:
+    cond_key: reference
+    cond_dim: 32
+    obs_key: observation_lo
+  hide_obs_lo_from_hi: true
+
+  guide:
+    path: ${prior}
+    temp: 1.0
+    ctx: 1
+    c: 64
+    r: 5
+    p: 0.1
+    p_anneal: 1e7
+    exclude_samples: false
+    model:
+      name: simple_prior
+      level: 0
+      labels: null
+      n_ctx: 64
+      width: 256
+      depth: 4
+      conditioner: simple
+      conditioner_past_ctx: 0
+      emb_dropout: 0.0
+      deterministic_z: false
+      deterministic_tgt: true
+      deterministic_cond: false
+      tanh_output: true
+      entropy_reg: 0.01
+      vae:
+        name: convvae_4x64_32
+        seq_len: 64
+        tanh_latents: true
+      bypass_encoder: true
+      vae_input_dim: 135
+      mixture_size: 8
+
+  batch_size: 256
+  rpbuf_size: 5000000
+  rpbuf_device: cpu
+  randexp_samples: 10000
+  warmup_samples: 10000
+  samples_per_update: 300
+  num_updates: 50
+  alpha: 1
+  graph: true
+
+model:
+  hi:
+    pi: pi_d2rl_d_256
+    q: qd_d2rl_d_256
+  lo:
+    pi: pi_comic_d2rl_gs_vc_ln_d_1024
+    _init_from_: ${policy_lo}
+
+optim:
+  hi:
+    pi:
+      _target_: torch.optim.Adam
+      lr: 1e-4
+      fuse: true
+    q: ${optim.hi.pi}

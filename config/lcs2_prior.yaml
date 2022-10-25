@@ -1,0 +1,70 @@
+defaults:
+  - common
+
+seed: 1
+slurm:
+  gpus_per_task: 1
+  cpus_per_task: 8
+  mem_gb: 128
+  constraint: gpu2
+
+loop_args:
+  normalize: false
+  prior: true
+  eval_interval: 5000
+  kl_reg: none
+
+seq_len: 64
+dataset:
+  path: ???
+  type: subseq
+  train_args:
+    length: ${seq_len}
+    skip: 1
+  valid_args:
+    length: ${seq_len}
+    skip: 128
+  inputs: [zs]
+  label: rpos
+  num_workers: 2
+
+n_updates: 1000000
+batch_size: 32
+loss: default
+distributed:
+  size: 1
+  rdvu_path: /tmp
+video: null
+eval:
+  video: null
+
+model:
+  name: simple_prior
+  level: 0
+  labels: null
+  n_ctx: ${seq_len}
+  width: 256
+  depth: 4
+  mixture_size: 8
+  conditioner: simple
+  conditioner_past_ctx: 0
+  emb_dropout: 0.0
+  deterministic_z: false
+  deterministic_tgt: true
+  deterministic_cond: false
+  tanh_output: true
+  entropy_reg: 0.01
+  vae:
+    name: convvae_4x64_32
+    #_init_from_: vae.pt
+    seq_len: ${seq_len}
+    tanh_latents: true
+  bypass_encoder: true
+  vae_input_dim: 135
+
+optim:
+  _all_:
+    _target_: torch.optim.Adam
+    lr: 3e-4
+    fuse: true
+    warmup: 100
