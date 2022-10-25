@@ -1,0 +1,364 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Leveraging Demonstrations with Latent Space Priors</title>
+
+  <!-- bib tags -->
+  <meta name="citation_title" content="Leveraging Demonstrations with Latent Space Priors"/>
+  <meta name="citation_author" content="Gehring, Jonas"/>
+  <meta name="citation_author" content="Gopinath, Deepak"/>
+  <meta name="citation_author" content="Won, Jungdam"/>
+  <meta name="citation_author" content="Krause, Andreas"/>
+  <meta name="citation_author" content="Synnaeve, Gabriel"/>
+  <meta name="citation_author" content="Usunier, Nicolas"/>
+  <!--<meta name="citation_abstract" content=""/>-->
+  <!--<meta name="citation_journal_title" content=""/> -->
+  <!--<meta name="citation_volume" content=""/>-->
+  <meta name="citation_publication_date" content="2022"/>
+  <meta name="citation_pdf_url" content=""/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style type="text/css">
+body {
+  background-color: white;
+  color: black;
+  text-align: center;
+}
+h1 {
+  margin-bottom: 0.1em;
+}
+h2 {
+  margin-top: 0.1em;
+  font-size: 1.1em;
+}
+h3 {
+  text-align: left;
+}
+p {
+	text-align: justify;
+}
+a {
+  text-decoration: none;
+}
+#main {
+  max-width: 1024px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.1em;
+}
+#authors {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+#authors td {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+#authors .affiliation {
+  font-size: 0.8em;
+}
+#approach td {
+	text-align: justify;
+  vertical-align: top;
+  padding: 1em;
+}
+#teaser {
+  clear: both;
+  margin-top: 0.5em;
+  display: grid;
+  grid-template-columns: 1fr auto 4fr auto 1fr;
+}
+.twocolumn {
+  clear: both;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.twocolumn p {
+  padding-right: 2em;
+}
+.block {
+  display: block;
+  clear: both;
+}
+ul {
+  text-align: left;
+}
+video {
+  width: 100%;
+}
+  </style>
+</head>
+
+<body>
+<div id="main">
+<h1>Leveraging Demonstrations with Latent Space Priors</h1>
+<h2></h2>
+<div id="authors">
+<table>
+  <tr>
+  <td><a href="https://jgehring.net">Jonas Gehring</a></td>
+  <td><a href="https://dpacgopinath.github.io/">Deepak Gopinath</a></td>
+  <td><a href="https://sites.google.com/view/jungdam/">Jungdam Won</a></td>
+  <td><a href="https://las.inf.ethz.ch/krausea">Andreas Krause</a></td>
+  <td><a href="https://ai.facebook.com/people/gabriel-synnaeve/">Gabriel Synnaeve</a></td>
+  <td><a href="https://ai.facebook.com/people/nicolas-usunier/">Nicolas Usunier</a></td>
+  </tr>
+  <tr>
+  <td class="affiliation">Meta AI, ETH Zürich</td>
+  <td class="affiliation">Meta AI</td>
+  <td class="affiliation">Meta AI</td>
+  <td class="affiliation">ETH Zürich</td>
+  <td class="affiliation">Meta AI</td>
+  <td class="affiliation">Meta AI</td>
+  </tr>
+</table>
+</div>
+
+<hr>
+<p>
+<b>TL;DR</b>&nbsp; Combining skill learning from demonstrations and sequence modeling to accelerate learning on transfer tasks.
+</p>
+<p>
+<a href="https://arxiv.org/abs/2110.10809">Paper</a> | 
+<a href="#videos">Videos</a> | 
+<a href="https://github.com/facebookresearch/latent-space-priors">Code</a> |
+<!--<a href="https://github.com/facebookresearch/lsprior#hierarchical-control">Pre-Trained Skill Policies</a> |-->
+<a href="https://github.com/facebookresearch/bipedal-skills">Benchmark</a>
+</p>
+
+<div id="teaser">
+  <div>
+    <video autoplay muted loop playsinline poster="imitate-zprior-rt.webp">
+      <source src="https://drive.google.com/uc?export=download&id=1kBHE-b5aOm2EsU0tLZEEknInIrbDxPaf"/>
+    </video>
+    <br><br>Low-level Policy
+  </div>
+  <div>
+    <span style="font-size:4em">&#187;</span>
+  </div>
+  <div>
+    <video autoplay muted loop playsinline poster="zprior-top.webp">
+      <source src="https://drive.google.com/uc?export=download&id=1zgGMXOPHRoxELmNSEk6zIaoWZxr0uM-f"/>
+    </video>
+  </div>
+  <div>
+    <span style="font-size:4em">&#171;</span>
+  </div>
+  <div>
+    <video autoplay muted loop playsinline poster="sampled-kinematic-12-rt.webp">
+      <source src="https://drive.google.com/uc?export=download&id=1MQqRKqPtk1wxoUtZECJZEbU8tlJ9GYJB"/>
+    </video>
+    <br><br>Latent Space Prior
+  </div>
+</div>
+
+<hr>
+<div class="block">
+<p>
+<b>Abstract</b>&nbsp;
+Demonstrations provide insight into relevant state or action space regions,
+bearing great potential to boost the efficiency and practicality of
+reinforcement learning agents. In this work, we propose to leverage
+demonstration datasets by combining skill learning and sequence modeling.
+Starting with a learned joint latent space, we separately train a generative
+model of demonstration sequences and an accompanying low-level policy. The
+sequence model forms a latent space prior over plausible demonstration behaviors
+to accelerate learning of high-level policies. We show how to acquire such
+priors from state-only motion capture demonstrations and explore several methods
+for integrating them into policy learning on transfer tasks. Our experimental
+results confirm that latent space priors provide significant gains in learning
+speed and final performance in a set of challenging sparse-reward environments
+with a complex, simulated humanoid.
+</p>
+</div>
+
+<hr>
+<div class="block">
+<h3>Approach</h3> 
+<p>
+<div>
+  <img width="90%" src="zprior-system.webp"/>
+</div>
+<p>
+Our approach consists of a pre-training phase (left), followed by high-level
+policy learning on transfer tasks. For pre-training, we embed
+demonstration trajectories \( \boldsymbol{x} \in X \) into a latent representations
+\( z \) with an auto-encoder.  We separately learn a prior \( \pi_0 \) that models
+latent space trajectories, as well as a low-level policy \( \pi_{lo} \) trained to
+reenact demonstrations from proprioceptive observations \( s^p \) a near-term
+targets \( z \).  On downstream tasks, we train a high-level policy \( \pi_{hi}(z|s) \)
+and utilize the latent space prior \( \pi_0 \) to accelerate learning.
+<br/>
+We investigate several methods of integration: (1) augmenting the <b>exploration</b>
+policy with sequences sampled from the prior; (2) <b>regularizing</b> the policy
+towards distributions predicted by the prior; (3) conditionally generating
+sequences from high-level actions actions to provide <b>temporal abstraction</b>.
+</p>
+</p>
+</div>
+
+<hr>
+<a name="videos"/><h3>Videos</h3>
+<p>
+Pre-Training: 
+<a href="#lowlevel">Low-level Policy</a> | 
+<a href="#sampled-kinematic">Sampled Motions (kinematic control)</a> |
+<a href="#sampled-physics">Sampled Motions (physics-based control)</a>
+<br>
+Transfer Tasks:
+<a href="#gototargets">GoToTargets</a> |
+<a href="#gaps">Gaps</a> | 
+<a href="#butterflies">Butterflies</a> | 
+<a href="#stairs">Stairs</a> |
+<a href="#planning">Planning</a>
+</p>
+
+<hr>
+<div class="block">
+<h3>Low-Level Policy</h3>
+<div class="twocolumn">
+  <div>
+    <p>
+    We show our low-level policy reenacting random clips from the demonstration
+    dataset of motion capture clips.  The low-level policy controls the golden
+    robot, the demonstration poses are shown in silver.
+    </p>
+  </div>
+  <div>
+    <video controls playsinline preload="none" poster="imitate-zprior-rt-2c.webp">
+      <source src="https://drive.google.com/uc?export=download&id=1vBjLzXtcGGnzOjdzYb79zJQzjMfx3wS4"/>
+    </video>
+  </div>
+</div>
+</div>
+
+<hr>
+<div class="block">
+<h3><a name="sampled-kinematic"/>Sampled Motions (kinematic control)</h3>
+<p>
+We sample five latent state sequences from the prior, without providing an
+initial context, and decode them into poses with the VAE decoder.  The sampled
+motions contain sequences from several different demonstrations clips; for
+example, the leftmost clip starts with <a
+href="http://mocap.cs.cmu.edu/search.php?subjectnumber=77">Subject 77, Trial
+10</a> and transitions into punches from the end of <a
+href="http://mocap.cs.cmu.edu/search.php?subjectnumber=86">Subject 86, Trial
+1</a>.  Overall, motions are of good quality, but we sometimes notice
+unrealistic behavior, e.g., the character sliding over the floor or jumping too
+far.
+</p>
+<video controls playsinline preload="none" poster="sampled-kinematic-rt2.webp">
+  <source src="https://drive.google.com/uc?export=download&id=1zZhbq6BJODVy08DUTGcv44609vJ2Vjf_"/>
+</video>
+</div>
+
+<hr>
+<div class="block">
+<h3><a name="sampled-physics"/>Sampled Motions (physics-based control)</h3>
+<p>
+Here, the sampled motions from above are re-enacted with the trained low-level policy by conditioning on the respective latent state sequence.
+</p>
+<video controls playsinline preload="none" poster="sampled-physics-rt2.webp">
+  <source src="https://drive.google.com/uc?export=download&id=18xfF_OPjRSv_lihgp4C2kz00Y1m4bDuS"/>
+</video>
+</div>
+
+<hr>
+<div class="block">
+<h3><a name="gototargets"/>GoToTargets</h3>
+<p>
+<ul>
+  <li>The policy without a prior (left) prefers leftward turns, even if this results in larger turns than necessary.</li>
+  <li>For "z-prior Exploration", the robot slips after attempting a sharp turn at high speed. This is a common failure mode in the GoToTargets task.</li>
+  <li>"z-prior Regularize" exhibits fast movements and quick turns.</li>
+  <li>Using priors as options results in smoother movements at the expense of slower turns.</li>
+  <li>The CoMic policy begins to slip continuously later in training, which leads to a drop in performance.</li>
+</ul>
+</p>
+<video controls playsinline preload="none" poster="gototargets-rt-label.webp">
+  <source src="https://drive.google.com/uc?export=download&id=1ze0CLo34xdgYxwHUzk2aNmllMRi4Styy"/>
+</video>
+</div>
+
+<hr>
+<div class="block">
+<h3><a name="gaps"/>Gaps</h3>
+<p>
+<ul>
+  <li>With priors as options, the humanoid utilizes its arms in a natural manner.</li>
+  <li>Other variants using our low-level policy achieve high running speeds and perform quick, small steps when necessary.</li>
+  <li>The CoMic policy runs at a lower speed and achieves lower returns.</li>
+</ul>
+</p>
+<video controls playsinline preload="none" poster="gaps-rt-label.webp">
+  <source src="https://drive.google.com/uc?export=download&id=1RprhDm8rN3A_VOJDvCIjNnea7nwEHNMC"/>
+</video>
+</div>
+
+<hr>
+<div class="block">
+<h3><a name="butterflies"/>Butterflies</h3>
+<p>
+<ul>
+  <li>All policies exhibit a rather unnatural walking style, as this task focuses on arm and hand movements.</li>
+  <li>Rollouts for "z-prior Explore" and "z-prior Regularize" achieve the maximum return of 10.</li>
+</ul>
+</p>
+<video controls playsinline preload="none" poster="butterflies-rt-label.webp">
+  <source src="https://drive.google.com/uc?export=download&id=15f5SirDXOmWPyJ_ySZ2l6AM2PLTyCzQH"/>
+</video>
+</div>
+
+<hr>
+<div class="block">
+<h3><a name="stairs"/>Stairs</h3>
+<p>
+<ul>
+  <li>All policies have trouble descending the staircase, with "z-prior Options" falling only after completing it.</li>
+  <li>Policies using the prior as options occasionally reach the second staircase in other task instances (not shown).</li>
+  <li>The CoMic low-level policy fails to climb stairs.</li>
+</ul>
+</p>
+<video controls playsinline preload="none" poster="stairs-rt-label.webp">
+  <source src="https://drive.google.com/uc?export=download&id=1NQP2uz4jWARC9xHOi9h2GF7aYCk09itG"/>
+</video>
+</div>
+
+<hr>
+<div class="block">
+<h3><a name="planning"/>Planning</h3>
+<p>
+Rollouts planning with latent space priors on a single-goal navigation task.  We
+also visualize the results from every 4th planning step below each video.  The
+black dot marks the agent position, the goal is shown in blue.  Orange lines
+depict the actual (future) trajectory of the robot, the selected plan is
+highlighted in red.  A sample of other candidate plans is shown in grey.  Note
+that plans (decoded latent state priors) contain full pose information; we show
+the X/Y positions only here.
+</p>
+<video controls playsinline preload="none" poster="planning.webp">
+  <source src="https://drive.google.com/uc?export=download&id=19sGBp6Ll5VRRNr0rLoqXH-yWLgZZw1Ue"/>
+</video>
+</div>
+
+<hr>
+<div class="footer">
+<p>
+Copyright © Meta Platforms, Inc.
+Legal:
+<a href="https://opensource.fb.com/legal/privacy" rel="noreferrer noopener">Privacy</a> |
+<a href="https://opensource.fb.com/legal/terms" rel="noreferrer noopener">Terms</a>
+</p>
+
+</div>
+</body>
+</html>
