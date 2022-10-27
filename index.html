@@ -16,7 +16,7 @@
   <!--<meta name="citation_journal_title" content=""/> -->
   <!--<meta name="citation_volume" content=""/>-->
   <meta name="citation_publication_date" content="2022"/>
-  <meta name="citation_pdf_url" content=""/>
+  <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2210.14685.pdf"/>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -128,11 +128,10 @@ video {
 <b>TL;DR</b>&nbsp; Combining skill learning from demonstrations and sequence modeling to accelerate learning on transfer tasks.
 </p>
 <p>
-<a href="https://arxiv.org/abs/2110.10809">Paper</a> | 
-<a href="#videos">Videos</a> | 
+<a href="https://arxiv.org/abs/2210.14685">Paper</a> |
+<a href="#videos">Videos</a> |
 <a href="https://github.com/facebookresearch/latent-space-priors">Code</a> |
-<!--<a href="https://github.com/facebookresearch/lsprior#hierarchical-control">Pre-Trained Skill Policies</a> |-->
-<a href="https://github.com/facebookresearch/bipedal-skills">Benchmark</a>
+<a href="https://github.com/facebookresearch/latent-space-priors#with-pre-trained-models">Pre-Trained Models</a>
 </p>
 
 <div id="teaser">
@@ -183,7 +182,7 @@ with a complex, simulated humanoid.
 
 <hr>
 <div class="block">
-<h3>Approach</h3> 
+<h3>Approach</h3>
 <p>
 <div>
   <img width="90%" src="zprior-system.webp"/>
@@ -209,15 +208,15 @@ sequences from high-level actions actions to provide <b>temporal abstraction</b>
 <hr>
 <a name="videos"/><h3>Videos</h3>
 <p>
-Pre-Training: 
-<a href="#lowlevel">Low-level Policy</a> | 
+Pre-Training:
+<a href="#lowlevel">Low-level Policy</a> |
 <a href="#sampled-kinematic">Sampled Motions (kinematic control)</a> |
 <a href="#sampled-physics">Sampled Motions (physics-based control)</a>
 <br>
 Transfer Tasks:
 <a href="#gototargets">GoToTargets</a> |
-<a href="#gaps">Gaps</a> | 
-<a href="#butterflies">Butterflies</a> | 
+<a href="#gaps">Gaps</a> |
+<a href="#butterflies">Butterflies</a> |
 <a href="#stairs">Stairs</a> |
 <a href="#planning">Planning</a>
 </p>
