@@ -1,10 +1,10 @@
 # Leveraging Demonstrations with Latent Space Priors
 
 This is the source code release for the paper [Leveraging Demonstrations with
-Latent Space Priors](TODO LINK TO ARXIV). It contains pre-training code (VAE,
-latent space prior, low-level policy) and code to train high-level policies with
-different prior integrations. Pre-trained policies are provided as well (see
-below).
+Latent Space Priors](https://arxiv.org/abs/2210.14685). It contains pre-training
+code (VAE, latent space prior, low-level policy) and code to train high-level
+policies with different prior integrations. Pre-trained models are provided as
+well (see below).
 
 ## Prerequisites
 
