@@ -13,10 +13,10 @@
   <meta name="citation_author" content="Synnaeve, Gabriel"/>
   <meta name="citation_author" content="Usunier, Nicolas"/>
   <!--<meta name="citation_abstract" content=""/>-->
-  <!--<meta name="citation_journal_title" content=""/> -->
-  <!--<meta name="citation_volume" content=""/>-->
-  <meta name="citation_publication_date" content="2022"/>
-  <meta name="citation_pdf_url" content="https://arxiv.org/pdf/2210.14685.pdf"/>
+  <meta name="citation_journal_title" content="Transactions on Machine Learning Research"/>
+  <meta name="citation_volume" content="03/2023"/>
+  <meta name="citation_publication_date" content="2023"/>
+  <meta name="citation_pdf_url" content="https://openreview.net/pdf?id=OzGIu4T4Cz"/>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -101,7 +101,7 @@ video {
 <body>
 <div id="main">
 <h1>Leveraging Demonstrations with Latent Space Priors</h1>
-<h2></h2>
+<h2>Transactions on Machine Learning Research (03/2023)</h2>
 <div id="authors">
 <table>
   <tr>
@@ -173,10 +173,11 @@ model of demonstration sequences and an accompanying low-level policy. The
 sequence model forms a latent space prior over plausible demonstration behaviors
 to accelerate learning of high-level policies. We show how to acquire such
 priors from state-only motion capture demonstrations and explore several methods
-for integrating them into policy learning on transfer tasks. Our experimental
+for integrating them into policy learning on transfer tasks.  Our experimental
 results confirm that latent space priors provide significant gains in learning
-speed and final performance in a set of challenging sparse-reward environments
-with a complex, simulated humanoid.
+speed and final performance. We benchmark our approach on a set of challenging
+sparse-reward environments with a complex, simulated humanoid, and on offline RL
+benchmarks for navigation and object manipulation.
 </p>
 </div>
 
@@ -219,6 +220,10 @@ Transfer Tasks:
 <a href="#butterflies">Butterflies</a> |
 <a href="#stairs">Stairs</a> |
 <a href="#planning">Planning</a>
+<br>
+Offline RL Tasks:
+<a href="#antmaze">AntMaze</a> |
+<a href="#kitchen">FankaKitchen</a>
 </p>
 
 <hr>
@@ -346,6 +351,48 @@ the X/Y positions only here.
 </p>
 <video controls playsinline preload="none" poster="planning.webp">
   <source src="https://drive.google.com/uc?export=download&id=19sGBp6Ll5VRRNr0rLoqXH-yWLgZZw1Ue"/>
+</video>
+</div>
+
+<hr>
+<div class="block">
+<h3><a name="antmaze"/>AntMaze</h3>
+<p>
+For AntMaze, we pre-train low-level policies and latent space priors on the
+<a href="https://sites.google.com/view/d4rl/home">D4RL offline dataset</a> and
+train high-level policies in a dense-reward setting. After 2M samples, all
+methods integrating the latent space prior solve the task. Without the prior
+(left), further training is required to reach the goal reliably.
+Videos are recorded in 2x real-time.
+</p>
+<video controls playsinline preload="none" poster="antmaze-medium.webp">
+  <source src="https://drive.google.com/uc?export=download&id=1KJz3vGLlIoQNtj4ePiwOS730XzvFD_8D"/>
+</video>
+
+<p>
+The low-level policy and prior obtained from the medium-sized maze above are
+transfer well on the larger maze. The rollouts below are again obtained after 2M
+samples of high-level policy learning. Without a prior, this task cannot be
+solved even within 10M samples.
+</p>
+<video controls playsinline preload="none" poster="antmaze-large.webp">
+  <source src="https://drive.google.com/uc?export=download&id=1P2fmBoKSjdlLNTAiXZ3rXpE6QoCv0xDm"/>
+</video>
+</div>
+
+<hr>
+<div class="block">
+<h3><a name="kitchen"/>FrankaKitchen</h3>
+<p>
+For the FrankaKitchen environment, low-level policies and latent space priors
+are trained on the corresponding <a href="https://sites.google.com/view/d4rl/home">D4RL offline dataset</a>.
+A challenge in this environment is sensor noise applied to observations.
+Using the prior for temporaly abstraction is the only method that achieves the
+maximum return, both the exploration and the regularization approach do not
+provide significant benefits over not using the prior.
+</p>
+<video controls playsinline preload="none" poster="franka.webp">
+  <source src="https://drive.google.com/uc?export=download&id=1KHzpRAF9M4_8NKKG81w149J3In8goyfQ"/>
 </video>
 </div>
 
